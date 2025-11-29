@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Toggle Application Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white w-full max-w-md sm:p-6 p-4 rounded-lg shadow-md">
+    <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+      <i class="fas fa-cogs text-blue-600"></i>
+      Manage Application Portal
+    </h2>
+
+    <!--<form method="POST" onsubmit="return confirmToggle()" class="space-y-4">-->
+    <!--  {% csrf_token %}-->
+    <!--  {{ form.non_field_errors }}-->
+
+    <!--  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">-->
+    <!--    <label for="id_is_portal_open" class="font-medium text-gray-800">-->
+    <!--      Application Portal-->
+    <!--    </label>-->
+    <!--    <div class="sm:ml-auto">-->
+    <!--      {{ form.is_portal_open }}-->
+    <!--    </div>-->
+    <!--  </div>-->
+
+    <!--  <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 transition duration-200">-->
+    <!--    <i class="fas fa-save"></i>-->
+    <!--    Save Changes-->
+    <!--  </button>-->
+    <!--</form>-->
+<form method="POST" onsubmit="return confirmToggle()" class="space-y-6 bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="text-red-600 text-sm">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <!-- Portal Toggle -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <label for="id_is_portal_open" class="font-medium text-gray-800">
+      Application Portal
+    </label>
+    <div class="sm:ml-auto">
+      <input type="checkbox" name="is_portal_open" id="id_is_portal_open"
+             class="form-checkbox h-5 w-5 text-blue-600"
+             {% if form.initial.is_portal_open %}checked{% endif %}>
+    </div>
+  </div>
+  {% if form.is_portal_open.errors %}
+    <p class="text-sm text-red-500">{{ form.is_portal_open.errors.0 }}</p>
+  {% endif %}
+
+  <!-- Start Date -->
+<div>
+  <label for="id_start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+  <input type="date" name="start_date" id="id_start_date"
+         value="{{ form.start_date.value|default:form.instance.start_date|date:'Y-m-d' }}"
+         class="block w-full rounded-md border-2 border-gray-500 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 mt-1">
+  <p class="text-xs text-gray-500 mt-1">This is when the portal becomes available for applications.</p>
+  {% if form.start_date.errors %}
+    <p class="text-sm text-red-500">{{ form.start_date.errors.0 }}</p>
+  {% endif %}
+</div>
+
+<!-- Early Consideration Deadline -->
+<div>
+  <label for="id_early_consideration_deadline" class="block text-sm font-medium text-gray-700">Early Consideration Deadline</label>
+  <input type="date" name="early_consideration_deadline" id="id_early_consideration_deadline"
+         value="{{ form.early_consideration_deadline.value|default:form.instance.early_consideration_deadline|date:'Y-m-d' }}"
+         class="block w-full rounded-md border-2 border-gray-500 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 mt-1">
+  <p class="text-xs text-gray-500 mt-1">Deadline for applicants who want to be considered early.</p>
+  {% if form.early_consideration_deadline.errors %}
+    <p class="text-sm text-red-500">{{ form.early_consideration_deadline.errors.0 }}</p>
+  {% endif %}
+</div>
+
+<!-- Regular Consideration Deadline -->
+<div>
+  <label for="id_regular_consideration_deadline" class="block text-sm font-medium text-gray-700">Regular Consideration Deadline</label>
+  <input type="date" name="regular_consideration_deadline" id="id_regular_consideration_deadline"
+         value="{{ form.regular_consideration_deadline.value|default:form.instance.regular_consideration_deadline|date:'Y-m-d' }}"
+         class="block w-full rounded-md border-2 border-gray-500 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 mt-1">
+  <p class="text-xs text-gray-500 mt-1">Final date to submit applications under regular consideration.</p>
+  {% if form.regular_consideration_deadline.errors %}
+    <p class="text-sm text-red-500">{{ form.regular_consideration_deadline.errors.0 }}</p>
+  {% endif %}
+</div>
+<!-- Submit Button -->
+  <button type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 transition duration-200">
+    <i class="fas fa-save"></i>
+    Save Changes
+  </button>
+</form>
+
+
+    {% if messages %}
+    <div class="mt-4 space-y-2">
+      {% for message in messages %}
+      <div class="p-3 rounded bg-green-100 text-green-800 flex items-start gap-2 text-sm sm:text-base">
+        <i class="fas fa-check-circle mt-1 text-green-600"></i>
+        <div>{{ message }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function confirmToggle() {
+      const checkbox = document.getElementById('id_is_portal_open');
+      const action = checkbox.checked ? 'open' : 'close';
+      return confirm(`Are you sure you want to ${action} the portal?`);
+    }
+  </script>
+</body>
+</html>

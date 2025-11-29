@@ -1,0 +1,230 @@
+{% extends 'application_intern/besi.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Activity Information{% endblock %}
+{% block info_title %}Activity Information{% endblock %}
+
+{% block info_description %}
+<div class="text-gray-300 mb-6">
+    <p>
+        This section collects key details about your activities such as extracurriculars, jobs, or community service.
+        <strong class="text-white">
+            For each activity, provide its name, the time period involved, your role or title, and a brief description
+            of your responsibilities or impact.
+        </strong>
+    </p>
+</div>
+
+<div class="text-gray-300 mb-6">
+    <p>
+        <strong>Tip:</strong> Focus on meaningful experiences and highlight leadership, consistency, or impact where
+        possible.
+    </p>
+</div>
+{% endblock %}
+
+
+
+{% block form_content %}
+<style>
+    .required {
+        color: rgb(255, 144, 144) !important;
+    }
+
+    .activity-form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+        .activity-form-container {
+            flex-direction: row;
+        }
+
+        .activity-form-main {
+            flex: 2;
+        }
+
+        .activity-list-section {
+            flex: 1;
+        }
+    }
+</style>
+
+<div class="activity-form-container">
+    <!-- Left Column - Form Section -->
+    <div class="activity-form-main">
+        <div class="">
+            <h2 class="text-2xl font-bold mb-6  text-secondary">
+                Activities
+            </h2>
+
+            <div class="text-gray-300 mb-6">
+
+            </div>
+
+            <!-- Activity Form Container -->
+            <div id="activity-form">
+                {% include 'intern_partials/activities.html' %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                <button type="button"
+                    class="btn-secondary flex items-center justify-center gap-2 px-6 py-3 bg-secondary-dark"
+                    hx-get="{% url 'intern_create_activity' %}" hx-target="#activity-form" hx-swap="beforeend">
+                    <i class="fas fa-plus-circle"></i> Add Activity
+                </button>
+
+                <button class="btn-primary flex items-center justify-center gap-2 px-6 py-3 bg-primary-dark"
+                    type="button" id="submit-all">
+                    <i class="fas fa-check-circle"></i> Save All
+                </button>
+            </div>
+            <div class="mt-4 text-sm text-gray-400">
+                <p>Please remember to click the <strong class="text-white">SAVE ALL</strong> button after adding
+                    activity(s).</p>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <hr class="my-6 border-gray-600/20" />
+            <div class="flex flex-col sm:flex-row justify-between items-stretch gap-4 pt-8">
+                <a href="{{ previous_url }}"
+                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary-light text-white rounded-xl shadow hover:bg-primary-dark hover:shadow-blue-500/30 transition-all duration-300">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </a>
+
+                <a href="{{ next_url }}"
+                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary-light text-white rounded-xl shadow hover:bg-secondary-dark hover:shadow-blue-500/30 transition-all duration-300">
+                    <span>Continue</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Activities List (Desktop) -->
+</div>
+
+<!-- Mobile Activities List (Hidden on Desktop) -->
+<div class="lg:hidden mt-8">
+    <div class="bg-white/80 dark:bg-gray-800/10 p-2 rounded-xl shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-secondary flex items-center gap-2">
+            <i class="fas fa-running"></i>
+            Added Activities
+        </h3>
+
+        <div id="mobile-activity-list" class="space-y-4">
+            {% for activity in activities %}
+            {% include 'intern_partials/activities_list.html' %}
+            {% empty %}
+            <div class="bg-primary-dark/20 p-4 rounded-lg text-center">
+                <i class="fas fa-user-friends text-2xl text-gray-400 mb-2"></i>
+                <p class="text-gray-400">No activities added yet</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block info_hints %}
+<div class="activity-list-section hidden lg:block">
+    <div class="bg-white/80 dark:bg-gray-800/10 p-2 rounded-xl shadow-lg sticky top-8">
+        <hr class="my-4 border-gray-600/20" />
+        <h3 class="text-xl font-bold mb-4 text-secondary flex items-center gap-2">
+            <i class="fas fa-running"></i>
+            Added Activities
+        </h3>
+
+        <div id="activity-list" class="space-y-4">
+            {% for activity in activities %}
+            {% include 'intern_partials/activities_list.html' %}
+            {% empty %}
+            <div class="bg-primary-dark/20 p-4 rounded-lg text-center">
+                <i class="fas fa-user-friends text-2xl text-gray-400 mb-2"></i>
+                <p class="text-gray-400">No activities added yet</p>
+            </div>
+            {% endfor %}
+        </div>
+        <hr class="my-4 border-gray-600/20" />
+
+    </div>
+</div>
+<div class="space-y-4">
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-running mr-2 text-secondary"></i> Activity Types
+        </h4>
+        <p class="text-gray-300 text-base">
+            Include extracurriculars, community service, internships, part-time jobs, or any significant responsibility.
+        </p>
+    </div>
+
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-hourglass-half mr-2 text-secondary"></i> Time Commitment
+        </h4>
+        <p class="text-gray-300 text-base">
+            Indicate how often and how long you participated (e.g., 3 hours/week for 6 months).
+        </p>
+    </div>
+
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-award mr-2 text-secondary"></i> Your Role
+        </h4>
+        <p class="text-gray-300 text-base">
+            Briefly describe your role, impact, or leadership in the activity.
+        </p>
+    </div>
+
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-save mr-2 text-secondary"></i> Save Regularly
+        </h4>
+        <p class="text-gray-300 text-base">
+            Don’t forget to click “Save All” after adding or editing activities.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/activities.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle the Save All button click
+    document.getElementById('submit-all').addEventListener('click', function() {
+        // Find all save buttons in the form and click them
+        document.querySelectorAll('#activity-form .btn-save-activity').forEach(btn => {
+            btn.click();
+        });
+        
+        // Show a success message
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg p-8';
+        toast.innerHTML = '<i class="fas fa-check-circle mr-2 text-secondary"></i> All activities saved successfully';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 10000);
+    });
+    
+    // HTMX after swap handler to reinitialize any elements
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        if (evt.detail.target.id === 'activity-form' || 
+            evt.detail.target.id === 'activity-list' ||
+            evt.detail.target.id === 'mobile-activity-list') {
+            // Any additional initialization can go here
+        }
+    });
+});
+</script>
+{% endblock %}

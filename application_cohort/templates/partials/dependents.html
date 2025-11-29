@@ -1,0 +1,50 @@
+{% load widget_tweaks %}
+
+<form hx-post="{% url 'create_dependent' %}" 
+      hx-target="#dependent-list" 
+      hx-swap="beforeend"      
+      hx-on::after-request="this.remove()" 
+      hx-trigger="click from:#submit-all"
+      class="bg-white/10 dark:bg-gray-800/20 p-4 rounded-xl shadow-md mb-6 border border-primary/20">
+
+    <div class="space-y-4">
+        <!-- Dependent Name -->
+        <div class="bg-white/80 dark:bg-gray-800/10 p-2 rounded-xl shadow-sm">
+            <label class="form-label">
+                <i class="fas fa-user mr-2 text-blue-600 dark:text-blue-400"></i>
+                <span class="text-gray-800 dark:text-gray-200">{{ form.dependent_name.label }}</span>
+            </label>
+            <div class="relative mt-2">
+                {{ form.dependent_name|add_class:"form-input pl-10 w-full rounded-lg px-4 py-3 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50" }}
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relationship -->
+        <div class="bg-white/80 dark:bg-gray-800/10 p-2 rounded-xl shadow-sm">
+            <label class="form-label">
+                <i class="fas fa-heart mr-2 text-blue-600 dark:text-blue-400"></i>
+                <span class="text-gray-800 dark:text-gray-200">{{ form.relationship.label }}</span>
+            </label>
+            <p class="text-xs text-gray-500 mb-2">Describe how this person is related to you (e.g. cousin, grandmother, etc.)</p>
+            <div class="relative mt-2">
+                {{ form.relationship|add_class:"form-input pl-10 w-full rounded-lg px-4 py-3 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50" }}
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-heart text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+    
+        <!-- Action Buttons -->
+        <div class="flex justify-end gap-3 pt-4">
+            <button type="button" 
+                    class="px-4 py-2 bg-red-500/90 hover:bg-red-600 text-white rounded-lg transition-all flex items-center gap-2"
+                    hx-on:click="this.closest('form').remove()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    </div>
+</form>

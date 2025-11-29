@@ -1,0 +1,218 @@
+{% extends 'application_intern/besi.html' %}
+{% load static %}
+
+{% block title %}Dependents Information{% endblock %}
+
+{% block info_title %}Dependents Information{% endblock %}
+
+{% block info_description %}
+<div class="text-gray-300 mb-6">
+    <p>
+        This section gathers information about any other dependents your parents or guardians support financially.
+        <strong class="text-white">
+            Please name any person other than you and your siblings whom your parents/guardians provide financial support,
+            and briefly describe the relationship (e.g., cousin, grandmother, etc.).
+        </strong>
+    </p>
+</div>
+
+<div class="text-gray-300 mb-6">
+    <p>
+        <strong>Note:</strong> Include all dependents being supported by your family, even if they don't live with you.
+    </p>
+</div>
+{% endblock %}
+
+{% block form_content %}
+<style>
+    .required {
+        color: rgb(255, 144, 144) !important;
+    }
+    
+    .dependent-form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    @media (min-width: 1024px) {
+        .dependent-form-container {
+            flex-direction: row;
+        }
+        
+        .dependent-form-main {
+            flex: 2;
+        }
+        
+        .dependent-list-section {
+            flex: 1;
+        }
+    }
+</style>
+
+<div class="dependent-form-container">
+    <!-- Left Column - Form Section -->
+    <div class="dependent-form-main">
+        <div class="">
+            <h2 class="text-2xl font-bold mb-6 text-secondary">
+                Dependents
+            </h2>
+            
+            <div class="text-gray-300 mb-6">
+                Please name any person other than you and your siblings, if any, whom your parents or guardians provide financial support
+                and briefly describe the relationship (e.g. cousin, grandmother, etc.)
+            </div>
+            
+            <!-- Dependent Form Container -->
+            <div id="dependent-form">
+                {% include 'intern_partials/dependents.html' %}
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                <button type="button" class="btn-secondary flex items-center justify-center gap-2 px-6 py-3 bg-secondary-dark"
+                    hx-get="{% url 'intern_create_dependent' %}" 
+                    hx-target="#dependent-form" 
+                    hx-swap="beforeend">
+                    <i class="fas fa-plus-circle"></i> Add Dependent
+                </button>
+                
+                <button class="btn-primary flex items-center justify-center gap-2 px-6 py-3 bg-primary-dark" 
+                        type="button" id="submit-all">
+                    <i class="fas fa-check-circle"></i> Save All
+                </button>
+            </div>
+            
+            <div class="mt-4 text-sm text-gray-400">
+                <p>Please remember to click the <strong class="text-white">SAVE ALL</strong> button after adding dependent(s).</p>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <hr class="my-6 border-gray-600/20" />
+            <div class="flex flex-col sm:flex-row justify-between items-stretch gap-4 pt-8">
+                <a href="{{ previous_url }}"
+                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary-light text-white rounded-xl shadow hover:bg-primary-dark hover:shadow-blue-500/30 transition-all duration-300">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </a>
+            
+                <a href="{{ next_url }}"
+                class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary-light text-white rounded-xl shadow hover:bg-secondary-dark hover:shadow-blue-500/30 transition-all duration-300">
+                    <span>Continue</span>
+                    <i class="fas fa-arrow-right"></i>
+            </a>
+            </div>
+                </div>
+    </div>
+    
+    <!-- Right Column - Dependents List (Desktop) -->
+</div>
+
+<!-- Mobile Dependents List (Hidden on Desktop) -->
+<div class="lg:hidden mt-8">
+    <div class="bg-white/80 dark:bg-gray-800/10 p-2 rounded-xl shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-secondary flex items-center gap-2">
+            <i class="fas fa-users"></i>
+            Added Dependents
+        </h3>
+        
+        <div id="mobile-dependent-list" class="space-y-4">
+            {% for dependent in dependents %}
+                {% include 'intern_partials/dependents_list.html' %}
+            {% empty %}
+                <div class="bg-primary-dark/20 p-4 rounded-lg text-center">
+                    <i class="fas fa-user-friends text-2xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-400">No dependents added yet</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block info_hints %}
+<div class="dependent-list-section hidden lg:block">
+    <div class="bg-white/80 dark:bg-gray-800/10 p-2 rounded-xl shadow-lg sticky top-8">
+        <hr class="my-4 border-gray-600/20" />
+        <h3 class="text-xl font-bold mb-4 text-secondary flex items-center gap-2">
+            <i class="fas fa-users"></i>
+            Added Dependents
+        </h3>
+        
+        <div id="dependent-list" class="space-y-4">
+            {% for dependent in dependents %}
+                {% include 'intern_partials/dependents_list.html' %}
+            {% empty %}
+                <div class="bg-primary-dark/20 p-4 rounded-lg text-center">
+                    <i class="fas fa-user-friends text-2xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-400">No dependents added yet</p>
+                </div>
+            {% endfor %}
+        </div>
+        <hr class="my-4 border-gray-600/20" />
+    </div>
+</div>
+<div class="space-y-4">
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-id-card mr-2 text-secondary"></i> Dependent Details
+        </h4>
+        <p class="text-gray-300 text-base">
+            Include full names and their relationship to you.
+        </p>
+    </div>
+
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-hand-holding-heart mr-2 text-secondary"></i> Support Information
+        </h4>
+        <p class="text-gray-300 text-base">
+            Only include dependents who receive regular financial support from your family.
+        </p>
+    </div>
+
+    
+    <div class="bg-primary-dark/30 p-4 rounded-lg">
+        <h4 class="font-bold text-white mb-2">
+            <i class="fas fa-save mr-2 text-secondary"></i> Saving Information
+        </h4>
+        <p class="text-gray-300 text-base">
+            Remember to click "Save All" after adding each dependent. (For mobile devices, after saving, refresh the page to see the changes.)
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dependents.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle the Save All button click
+    document.getElementById('submit-all').addEventListener('click', function() {
+        // Find all save buttons in the form and click them
+        document.querySelectorAll('#dependent-form .btn-save-dependent').forEach(btn => {
+            btn.click();
+        });
+        
+        // Show a success message
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg p-8';
+        toast.innerHTML = '<i class="fas fa-check-circle mr-2 text-secondary"></i> All dependents saved successfully';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 10000);
+    });
+    
+    // HTMX after swap handler to reinitialize any elements
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        if (evt.detail.target.id === 'dependent-form' || 
+            evt.detail.target.id === 'dependent-list' ||
+            evt.detail.target.id === 'mobile-dependent-list') {
+            // Any additional initialization can go here
+        }
+    });
+});
+</script>
+{% endblock %}
